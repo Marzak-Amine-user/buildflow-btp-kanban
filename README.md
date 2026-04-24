@@ -331,8 +331,37 @@ Cette version reste une première base de projet. Certaines limites existent enc
 - il n'y a pas encore de tests automatisés ;
 - il n'y a pas encore d'upload de documents chantier.
 
+---
 
-## 14. Conclusion
+## 12. Reprise du projet (Partie 2)
+
+Dans le cadre de la seconde partie du projet, plusieurs améliorations ont été apportées afin de rendre l'application plus interactive, robuste et ergonomique.
+
+### Débogage et vérifications initiales
+- Vérification et consolidation de l'architecture existante.
+- Ajout des routes manquantes dans l'API Express (`PUT` et `DELETE` sur `/api/tasks/:id`).
+- Adaptation du frontend (service API) pour correspondre rigoureusement aux méthodes du backend.
+
+### Édition et suppression de tâches
+- **Édition :** Possibilité de mettre à jour l'intégralité d'une tâche (titre, description, statut, priorité, échéance, etc.) depuis la vue de détail.
+- **Suppression :** Ajout d'une fonctionnalité de suppression sécurisée par une alerte de confirmation native, accessible depuis les cartes du Kanban et le tableau de bord.
+
+### Gestion des états (UX)
+L'expérience utilisateur a été grandement fluidifiée grâce aux retours visuels :
+- **Chargement :** Intégration d'un indicateur visuel animé (*spinner*) pendant le chargement des données.
+- **Erreurs :** Affichage de messages clairs en cas d'échec de la communication avec l'API.
+- **Notifications (Toasts) :** Apparition de notifications éphémères confirmant le succès des actions utilisateur (création, modification, suppression).
+- **États vides :** Amélioration visuelle des colonnes Kanban avec un message explicite et illustré lorsqu'aucune tâche n'est présente.
+
+### Système de notes de chantier
+- Enrichissement du modèle de données (backend) avec un nouveau champ `notes` pour les tâches.
+- Création d'un encart dédié "Notes de chantier" dans la page de détail d'une tâche.
+- Implémentation d'une édition *inline* permettant de lire et de sauvegarder rapidement des remarques spécifiques à une tâche.
+- Refonte visuelle globale (CSS natif) pour aérer les cartes, optimiser les contrastes et moderniser l'interface tout en respectant l'identité BTP (bleu profond, orange vif, nuances de gris).
+
+---
+
+## 13. Conclusion
 
 BuildFlow répond au cahier des charges de la première partie du TP : l'application est exécutable, structurée, lisible, documentée et centrée sur un besoin métier réaliste du BTP.
 

@@ -15,8 +15,13 @@
         :task="task"
         @drag-start="$emit('drag-start', task)"
         @status-change="(task, status) => $emit('status-change', task, status)"
+        @delete-task="(task) => $emit('delete-task', task)"
       />
-      <p v-if="!tasks.length" class="empty-state">Déposez une tâche ici ou changez son statut.</p>
+      <div v-if="!tasks.length" class="empty-column">
+        <div class="empty-column-icon">📭</div>
+        <p>Aucune tâche ici</p>
+        <small>Déposez-en une ou changez son statut.</small>
+      </div>
     </div>
   </section>
 </template>
@@ -30,5 +35,5 @@ defineProps({
   color: { type: String, default: '#64748b' },
   tasks: { type: Array, default: () => [] }
 })
-defineEmits(['status-change', 'drag-start', 'drop-task'])
+defineEmits(['status-change', 'drag-start', 'drop-task', 'delete-task'])
 </script>

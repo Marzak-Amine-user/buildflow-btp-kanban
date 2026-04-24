@@ -29,6 +29,7 @@
       <button v-if="task.status !== 'progress'" @click="$emit('status-change', task, 'progress')">En cours</button>
       <button v-if="task.status !== 'blocked'" @click="$emit('status-change', task, 'blocked')">Bloquer</button>
       <button v-if="task.status !== 'done'" @click="$emit('status-change', task, 'done')">Terminer</button>
+      <button class="danger-text" @click.stop="confirmDelete" style="color: #ef4444; border-color: transparent; padding: 2px 8px; font-size: 0.8em; margin-left: auto;">Supprimer</button>
     </div>
   </article>
 </template>
@@ -37,6 +38,12 @@
 import { formatDate, isOverdue, priorityClass } from '../utils/format'
 import IconSymbol from './IconSymbol.vue'
 
-defineProps({ task: { type: Object, required: true } })
-defineEmits(['status-change', 'drag-start'])
+const props = defineProps({ task: { type: Object, required: true } })
+const emit = defineEmits(['status-change', 'drag-start', 'delete-task'])
+
+function confirmDelete() {
+  if (confirm('Voulez-vous vraiment supprimer cette tâche ?')) {
+    emit('delete-task', props.task)
+  }
+}
 </script>

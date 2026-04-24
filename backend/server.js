@@ -123,27 +123,76 @@ app.get('/api/tasks/:id', (req, res) => {
   res.json(enrichTask(task))
 })
 app.post('/api/tasks', (req, res) => {
-  const { projectId, title, description, ownerId, dueDate, priority, status, category, estimatedHours } = req.body
+  const { projectId, title, description, ownerId, dueDate, priority, status, category, estimatedHours, notes } = req.body
   if (!projectId || !title || !ownerId || !dueDate) return res.status(400).json({ message: 'Chantier, titre, responsable et échéance sont obligatoires.' })
-  const task = { id: nextId(tasks), projectId: Number(projectId), title, description: description || '', ownerId: Number(ownerId), dueDate, priority: priority || 'Moyenne', status: status || 'todo', category: category || 'Général', estimatedHours: Number(estimatedHours) || 1, checklist: [], comments: [] }
+  
+  // Ajout du champ "notes" (texte simple ou HTML) dans la structure de données de la tâche en mémoire
+  const task = { id: nextId(tasks), projectId: Number(projectId), title, description: description || '', ownerId: Number(ownerId), dueDate, priority: priority || 'Moyenne', status: status || 'todo', category: category || 'Général', estimatedHours: Number(estimatedHours) || 1, checklist: [], comments: [], notes: notes || '' }
+  
+  // Sauvegarde dans le tableau en mémoire (simulant une base de données)
   tasks.push(task)
   logActivity(`Nouvelle tâche : ${task.title}`, 'success')
   res.status(201).json(enrichTask(task))
 })
+
+// Route PUT pour modifier intégralement ou partiellement une tâche existante
+app.put('/api/tasks/:id', (req, res) => {
+  const taskId = Number(req.params.id)
+  const taskIndex = tasks.findIndex((t) => t.id === taskId)
+  
+  // Gestion du cas où la tâche n'existe pas dans le tableau en mémoire
+  if (taskIndex === -1) return res.status(404).json({ message: 'Tâche introuvable' })
+
+  const oldTask = tasks[taskIndex]
+  const previousStatus = oldTask.status
+
+  // Mise à jour de la tâche avec les nouvelles données
+  // Comme il n'y a pas de base de données, on met à jour l'objet dans le tableau
+  const updatedTask = {
+    ...oldTask,
+    ...req.body,
+    id: taskId, // Sécurité : empêcher la modification de l'ID
+    projectId: req.body.projectId ? Number(req.body.projectId) : oldTask.projectId,
+    ownerId: req.body.ownerId ? Number(req.body.ownerId) : oldTask.ownerId,
+    estimatedHours: req.body.estimatedHours ? Number(req.body.estimatedHours) : oldTask.estimatedHours,
+    notes: req.body.notes !== undefined ? req.body.notes : oldTask.notes // Mise à jour des notes
+  }
+
+  // Remplacement dans le tableau en mémoire
+  tasks[taskIndex] = updatedTask
+
+  if (updatedTask.status && updatedTask.status !== previousStatus) {
+    logActivity(`Tâche déplacée : ${updatedTask.title} → ${statuses.find((s) => s.key === updatedTask.status)?.label || updatedTask.status}`, 'info')
+  } else {
+    logActivity(`Tâche mise à jour (PUT) : ${updatedTask.title}`, 'info')
+  }
+  
+  res.json(enrichTask(updatedTask))
+})
+
 app.patch('/api/tasks/:id', (req, res) => {
   const task = getTask(req.params.id)
   if (!task) return res.status(404).json({ message: 'Tâche introuvable' })
   const previousStatus = task.status
-  Object.assign(task, { ...req.body, projectId: req.body.projectId ? Number(req.body.projectId) : task.projectId, ownerId: req.body.ownerId ? Number(req.body.ownerId) : task.ownerId, estimatedHours: req.body.estimatedHours ? Number(req.body.estimatedHours) : task.estimatedHours })
+  Object.assign(task, { ...req.body, projectId: req.body.projectId ? Number(req.body.projectId) : task.projectId, ownerId: req.body.ownerId ? Number(req.body.ownerId) : task.ownerId, estimatedHours: req.body.estimatedHours ? Number(req.body.estimatedHours) : task.estimatedHours, notes: req.body.notes !== undefined ? req.body.notes : task.notes })
   if (req.body.status && req.body.status !== previousStatus) logActivity(`Tâche déplacée : ${task.title} → ${statuses.find((s) => s.key === task.status)?.label || task.status}`, 'info')
   else logActivity(`Tâche mise à jour : ${task.title}`, 'info')
   res.json(enrichTask(task))
 })
+
+// Route DELETE pour supprimer une tâche
 app.delete('/api/tasks/:id', (req, res) => {
   const task = getTask(req.params.id)
+  
+  // Vérifie si la tâche existe avant de la supprimer
   if (!task) return res.status(404).json({ message: 'Tâche introuvable' })
+    
+  // Suppression de la tâche du tableau en mémoire (simulation d'un DELETE SQL)
   tasks = tasks.filter((item) => item.id !== Number(req.params.id))
+  
   logActivity(`Tâche supprimée : ${task.title}`, 'warning')
+  
+  // Renvoie un statut 204 No Content pour indiquer que la suppression a réussi, sans corps de réponse
   res.status(204).send()
 })
 app.post('/api/tasks/:id/comments', (req, res) => {

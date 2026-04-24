@@ -71,6 +71,7 @@ export const tasks = [
       { id: 2, label: 'Circuit livraison', done: false },
       { id: 3, label: 'Validation SPS', done: false }
     ],
+    notes: 'Vérifier la météo avant la validation finale.',
     comments: [
       { id: 1, author: 'Sonia Mercier', message: 'Prévoir un accès séparé pour les livraisons béton.', createdAt: '2026-04-15' }
     ]
@@ -90,6 +91,7 @@ export const tasks = [
       { id: 1, label: 'Comparer deux fournisseurs', done: true },
       { id: 2, label: 'Valider le devis', done: false }
     ],
+    notes: '',
     comments: [
       { id: 1, author: 'Nina Lopez', message: 'Blocage : devis fournisseur non reçu.', createdAt: '2026-04-19' }
     ]
@@ -106,6 +108,7 @@ export const tasks = [
     category: 'Gros œuvre',
     estimatedHours: 6,
     checklist: [],
+    notes: '',
     comments: []
   },
   {

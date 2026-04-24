@@ -33,7 +33,7 @@ export const api = {
   getTasks: (params = {}) => request(`/tasks${query(params)}`),
   getTask: (id) => request(`/tasks/${id}`),
   createTask: (payload) => request('/tasks', { method: 'POST', body: JSON.stringify(payload) }),
-  updateTask: (id, payload) => request(`/tasks/${id}`, { method: 'PATCH', body: JSON.stringify(payload) }),
+  updateTask: (id, payload) => request(`/tasks/${id}`, { method: 'PUT', body: JSON.stringify(payload) }),
   deleteTask: (id) => request(`/tasks/${id}`, { method: 'DELETE' }),
   addComment: (id, payload) => request(`/tasks/${id}/comments`, { method: 'POST', body: JSON.stringify(payload) }),
   addChecklistItem: (id, payload) => request(`/tasks/${id}/checklist`, { method: 'POST', body: JSON.stringify(payload) }),

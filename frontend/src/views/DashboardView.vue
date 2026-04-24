@@ -54,7 +54,7 @@
   <section class="panel">
     <div class="section-title"><h2>Tâches critiques et bloquées</h2><RouterLink to="/reports">Analyse complète</RouterLink></div>
     <div class="cards-grid">
-      <TaskCard v-for="task in criticalTasks" :key="task.id" :task="task" @status-change="changeStatus" />
+      <TaskCard v-for="task in criticalTasks" :key="task.id" :task="task" @status-change="changeStatus" @delete-task="deleteTask" />
       <p v-if="!criticalTasks.length" class="empty-state">Aucune tâche critique en cours.</p>
     </div>
   </section>
@@ -78,6 +78,10 @@ async function load() {
 }
 async function changeStatus(task, status) {
   await api.updateTask(task.id, { status })
+  await load()
+}
+async function deleteTask(task) {
+  await api.deleteTask(task.id)
   await load()
 }
 onMounted(load)
