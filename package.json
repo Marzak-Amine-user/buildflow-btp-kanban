@@ -1,0 +1,17 @@
+{
+  "name": "buildflow-ultimate",
+  "version": "3.0.0",
+  "private": true,
+  "description": "Application professionnelle de suivi de chantiers BTP avec Kanban Vue 3 et API Express.",
+  "scripts": {
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "start": "npm run dev",
+    "backend": "npm run dev --prefix backend",
+    "frontend": "npm run dev --prefix frontend"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "devDependencies": {}
+}
